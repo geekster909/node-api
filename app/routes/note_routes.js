@@ -2,6 +2,23 @@ module.exports = function(app, db) {
 
 	var ObjectID = require('mongodb').ObjectID;
 
+	app.get('/notes', (req, res) => {
+		db.collection('notes').find({}).toArray(function(err, items) {
+		    // console.log("Found records");
+		    // console.log(items);
+		    let html = '';
+		    for (let i = 0; i < items.length; i++) {
+		    	html += `<div>`;
+			    html +=   `<h3><a href="/notes/${items[i]._id}">${items[i].title}</a></h3>`;
+			    html +=   `<p>${items[i].text}</p>`;
+		    	html += `</div>`;
+		    	html += `<hr/>`;
+		    }
+
+		    res.send(html);
+		});
+	});
+
 	app.get('/notes/:id', (req, res) => {
 		const id = req.params.id;
 		const details = { '_id': new ObjectID(id) };
